@@ -1,5 +1,6 @@
 import os
 import socket
+import thread
 
 votacao = [0]*8
 pre = 'Fernando Haddad (13) / Jair Bolsonaro (17) / Branco (B)'
