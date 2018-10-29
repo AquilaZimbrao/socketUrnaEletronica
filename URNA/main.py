@@ -56,6 +56,7 @@ def menuAdmin():
     elif (asw == 3):
         votoSTR = map(str, votacao)
         enviarTRE(' '.join(votoSTR))
+        global votacao
         votacao = [0]*8
         limparTela()
         menuAdmin()

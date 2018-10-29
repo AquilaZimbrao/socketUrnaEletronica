@@ -13,6 +13,7 @@ PORTTSE = 5010
 votacao = [0]*8
 
 def pegar_dados_conexao():
+    global PORT, HOSTTSE, PORTTSE
     print 'Informe a porta na qual deseja trabalhar'
     PORT = input()
     print 'Informe o host do TSE'
@@ -42,6 +43,7 @@ def printRelatorio(args):
         print 'Nulos - ' + str(votacao[7])
 
 def enviarTSE(args):
+    global votacao
     tcpTSE = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     destTSE = (HOSTTSE, PORTTSE)
     tcpTSE.connect(destTSE)
