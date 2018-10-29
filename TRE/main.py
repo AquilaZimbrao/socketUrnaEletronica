@@ -35,10 +35,10 @@ def printRelatorio(args):
     while True:
         time.sleep(TIME)
         limparTela()
-        print 'Eduardo Paes (DEM) - ' + str(votacaoAcumulativa[0])
-        print 'Wilson Witzel (PSC) - ' + str(votacaoAcumulativa[1])
-        print 'Brancos - ' + str(votacaoAcumulativa[2])
-        print 'Nulos - ' + str(votacaoAcumulativa[3])
+        print 'Eduardo Paes (DEM) - ' + str(votacao[0])
+        print 'Wilson Witzel (PSC) - ' + str(votacao[1])
+        print 'Brancos - ' + str(votacao[2])
+        print 'Nulos - ' + str(votacao[3])
         print 'Fernando Haddad (PT) - ' + str(votacaoAcumulativa[4])
         print 'Jair Bolsonaro (PSL) - ' + str(votacaoAcumulativa[5])
         print 'Brancos - ' + str(votacaoAcumulativa[6])
@@ -51,9 +51,11 @@ def enviarTSE(args):
         tcpTSE = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         destTSE = (HOSTTSE, PORTTSE)
         tcpTSE.connect(destTSE)
-        vot = map(str, votacao)
+        votP = votacao[4:]
+        vot = map(str, votP)
         tcpTSE.send(' '.join(vot))
-        votacao = [0]*8
+        votP = [0]*4
+        votacao = votacao[:4] + votP
         tcpTSE.close()
 
 
