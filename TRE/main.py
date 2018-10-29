@@ -9,21 +9,17 @@ HOST = ''
 PORT = 5000
 HOSTTSE = '127.0.0.1'
 PORTTSE = 5010
-tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-orig = (HOST, PORT)
-tcp.bind(orig)
-tcp.listen(1)
 
-votacao = [0]*4
+votacao = [0]*8
 
 def pegar_dados_conexao():
-        print 'Informe a porta na qual deseja trabalhar'
-        PORT = input()
-        print 'Informe o host do TSE'
-        HOSTTSE = raw_input()
-        print 'Informe a porta do TSE'
-        PORTTSE = input()
-        limparTela()
+    print 'Informe a porta na qual deseja trabalhar'
+    PORT = input()
+    print 'Informe o host do TSE'
+    HOSTTSE = raw_input()
+    print 'Informe a porta do TSE'
+    PORTTSE = input()
+    limparTela()
 
 def limparTela():
     if (os.name == 'nt'):
@@ -56,22 +52,35 @@ def enviarTSE(args):
 
 
 pegar_dados_conexao()
+
+tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+orig = (HOST, PORT)
+tcp.bind(orig)
+tcp.listen(1)
+
+
 t = threading.Thread(target=printRelatorio,args=("thread sendo executada",))
 t.start()
 ts = threading.Thread(target=enviarTSE,args=("thread sendo executada",))
 ts.start()
 
-while True:
-    con, cliente = tcp.accept()
+def conectado(con, cliente):
     msg = con.recv(1024)
 
-    msg = msg.replace('\n', '')
-    relatorioUrna = msg.split(' ')
-    votacao[0] += int(relatorioUrna[0])
-    votacao[1] += int(relatorioUrna[1])
-    votacao[2] += int(relatorioUrna[2])
-    votacao[3] += int(relatorioUrna[3])
-    votacao[4] += int(relatorioUrna[4])
-    votacao[5] += int(relatorioUrna[5])
-    votacao[6] += int(relatorioUrna[6])
-    votacao[7] += int(relatorioUrna[7])
+    while True:
+        msg = msg.replace('\n', '')
+        relatorioUrna = msg.split(' ')
+        votacao[0] += int(relatorioUrna[0])
+        votacao[1] += int(relatorioUrna[1])
+        votacao[2] += int(relatorioUrna[2])
+        votacao[3] += int(relatorioUrna[3])
+        votacao[4] += int(relatorioUrna[4])
+        votacao[5] += int(relatorioUrna[5])
+        votacao[6] += int(relatorioUrna[6])
+        votacao[7] += int(relatorioUrna[7])
+
+
+while True:
+    con, cliente = tcp.accept()
+    thread.start_new_thread(conectado, tuple([con, cliente]))
+    
