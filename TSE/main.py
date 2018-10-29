@@ -37,7 +37,7 @@ t.start()
 while True:
     con, cliente = tcp.accept()
     msg = con.recv(1024)
-
+    msg = msg.replace('\n', '')
 
     relatorioUrna = msg.split(' ')
     votacao[0] += int(relatorioUrna[0])

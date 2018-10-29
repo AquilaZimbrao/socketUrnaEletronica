@@ -4,6 +4,15 @@ import socket
 votacao = [0]*8
 pre = 'Fernando Haddad (13) / Jair Bolsonaro (17) / Branco (B)'
 gov = 'Eduardo Paes (25) / Wilson Witzel (20) / Branco (B)'
+HOST = '127.0.0.1'
+PORT = 5000
+
+def pegar_dados_conexao():
+    print 'Informe o host do TRE'
+    HOST = raw_input()
+    print 'Informe a porta do TRE'
+    PORT = input()
+    limparTela()
 
 def limparTela():
     if (os.name == 'nt'):
@@ -41,12 +50,13 @@ def menuAdmin():
         limparTela()
         menuAdmin()
     elif (asw == 2):
-        enviarTRE('0 0 0 0 0 0 0 0')
+        enviarTRE('10 10 10 10 10 10 10 10')
         limparTela()
         menuAdmin()
     elif (asw == 3):
         votoSTR = map(str, votacao)
         enviarTRE(' '.join(votoSTR))
+        votacao = [0]*8
         limparTela()
         menuAdmin()
     elif (asw == 4):
@@ -98,8 +108,6 @@ def iniciarVotacao():
     iniciarVotacao()
 
 def enviarTRE(vot):
-    HOST = '127.0.0.1'
-    PORT = 5000
     tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     dest = (HOST, PORT)
     tcp.connect(dest)
@@ -107,4 +115,5 @@ def enviarTRE(vot):
     tcp.close()
 
 limparTela()
+pegar_dados_conexao()
 menu()
