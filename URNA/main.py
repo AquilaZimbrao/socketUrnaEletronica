@@ -8,6 +8,7 @@ HOST = '127.0.0.1'
 PORT = 5000
 
 def pegar_dados_conexao():
+    global HOST, PORT
     print 'Informe o host do TRE'
     HOST = raw_input()
     print 'Informe a porta do TRE'
@@ -69,6 +70,7 @@ def menuAdmin():
 
 
 def iniciarVotacao():
+    global votacao
     limparTela()
     print 'Iniciar Sessao de Voto (S/N): '
     asw = raw_input()
