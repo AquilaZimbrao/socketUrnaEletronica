@@ -4,14 +4,15 @@ import threading
 import time
 import os
 
-TIME = 5
-TIMESYNC = 7
+TIME = 1
+TIMESYNC = 1
 HOST = ''
 PORT = 5000
 HOSTTSE = '127.0.0.1'
 PORTTSE = 5010
 
 votacao = [0]*8
+votacaoAcumulativa = [0]*8
 
 def pegar_dados_conexao():
     global PORT, HOSTTSE, PORTTSE
@@ -34,24 +35,26 @@ def printRelatorio(args):
     while True:
         time.sleep(TIME)
         limparTela()
-        print 'Eduardo Paes (DEM) - ' + str(votacao[0])
-        print 'Wilson Witzel (PSC) - ' + str(votacao[1])
-        print 'Brancos - ' + str(votacao[2])
-        print 'Nulos - ' + str(votacao[3])
-        print 'Fernando Haddad (PT) - ' + str(votacao[4])
-        print 'Jair Bolsonaro (PSL) - ' + str(votacao[5])
-        print 'Brancos - ' + str(votacao[6])
-        print 'Nulos - ' + str(votacao[7])
+        print 'Eduardo Paes (DEM) - ' + str(votacaoAcumulativa[0])
+        print 'Wilson Witzel (PSC) - ' + str(votacaoAcumulativa[1])
+        print 'Brancos - ' + str(votacaoAcumulativa[2])
+        print 'Nulos - ' + str(votacaoAcumulativa[3])
+        print 'Fernando Haddad (PT) - ' + str(votacaoAcumulativa[4])
+        print 'Jair Bolsonaro (PSL) - ' + str(votacaoAcumulativa[5])
+        print 'Brancos - ' + str(votacaoAcumulativa[6])
+        print 'Nulos - ' + str(votacaoAcumulativa[7])
 
 def enviarTSE(args):
-    global votacao
-    tcpTSE = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    destTSE = (HOSTTSE, PORTTSE)
-    tcpTSE.connect(destTSE)
-    vot = map(str, votacao)
-    tcpTSE.send(' '.join(vot))
-    votacao = [0]*8
-    tcpTSE.close()
+    while True:
+        time.sleep(TIMESYNC)
+        global votacao
+        tcpTSE = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        destTSE = (HOSTTSE, PORTTSE)
+        tcpTSE.connect(destTSE)
+        vot = map(str, votacao)
+        tcpTSE.send(' '.join(vot))
+        votacao = [0]*8
+        tcpTSE.close()
 
 
 pegar_dados_conexao()
@@ -68,19 +71,30 @@ ts = threading.Thread(target=enviarTSE,args=("thread sendo executada",))
 ts.start()
 
 def conectado(con, cliente):
-    msg = con.recv(1024)
 
     while True:
+        msg = con.recv(1024)
         msg = msg.replace('\n', '')
-        relatorioUrna = msg.split(' ')
-        votacao[0] += int(relatorioUrna[0])
-        votacao[1] += int(relatorioUrna[1])
-        votacao[2] += int(relatorioUrna[2])
-        votacao[3] += int(relatorioUrna[3])
-        votacao[4] += int(relatorioUrna[4])
-        votacao[5] += int(relatorioUrna[5])
-        votacao[6] += int(relatorioUrna[6])
-        votacao[7] += int(relatorioUrna[7])
+
+        if (len(msg)):
+            relatorioUrna = msg.split(' ')
+            votacao[0] += int(relatorioUrna[0])
+            votacao[1] += int(relatorioUrna[1])
+            votacao[2] += int(relatorioUrna[2])
+            votacao[3] += int(relatorioUrna[3])
+            votacao[4] += int(relatorioUrna[4])
+            votacao[5] += int(relatorioUrna[5])
+            votacao[6] += int(relatorioUrna[6])
+            votacao[7] += int(relatorioUrna[7])
+
+            votacaoAcumulativa[0] += int(relatorioUrna[0])
+            votacaoAcumulativa[1] += int(relatorioUrna[1])
+            votacaoAcumulativa[2] += int(relatorioUrna[2])
+            votacaoAcumulativa[3] += int(relatorioUrna[3])
+            votacaoAcumulativa[4] += int(relatorioUrna[4])
+            votacaoAcumulativa[5] += int(relatorioUrna[5])
+            votacaoAcumulativa[6] += int(relatorioUrna[6])
+            votacaoAcumulativa[7] += int(relatorioUrna[7])
 
 
 while True:
