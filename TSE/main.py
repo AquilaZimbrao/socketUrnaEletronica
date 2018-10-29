@@ -34,13 +34,18 @@ def printRelatorio(args):
 t = threading.Thread(target=printRelatorio,args=("thread sendo executada",))
 t.start()
 
+def conectado(con, cliente):
+    while True:
+        msg = con.recv(1024)
+        msg = msg.replace('\n', '')
+
+        relatorioUrna = msg.split(' ')
+        votacao[0] += int(relatorioUrna[0])
+        votacao[1] += int(relatorioUrna[1])
+        votacao[2] += int(relatorioUrna[2])
+        votacao[3] += int(relatorioUrna[4])
+
 while True:
     con, cliente = tcp.accept()
-    msg = con.recv(1024)
-    msg = msg.replace('\n', '')
-
-    relatorioUrna = msg.split(' ')
-    votacao[0] += int(relatorioUrna[0])
-    votacao[1] += int(relatorioUrna[1])
-    votacao[2] += int(relatorioUrna[2])
-    votacao[3] += int(relatorioUrna[4])
+    thread.start_new_thread(conectado, tuple([con, cliente]))
+    
