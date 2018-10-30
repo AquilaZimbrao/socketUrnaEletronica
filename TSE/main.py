@@ -45,7 +45,7 @@ def conectado(con, cliente):
             votacao[0] += int(relatorioUrna[0])
             votacao[1] += int(relatorioUrna[1])
             votacao[2] += int(relatorioUrna[2])
-            votacao[3] += int(relatorioUrna[4])
+            votacao[3] += int(relatorioUrna[3])
 
 while True:
     con, cliente = tcp.accept()
